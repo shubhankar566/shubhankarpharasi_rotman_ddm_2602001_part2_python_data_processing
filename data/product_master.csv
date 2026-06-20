@@ -1,0 +1,11 @@
+product_id,product_name,category,standard_price
+P001,Wireless Mouse,Electronics,799
+P002,Bluetooth Speaker,Electronics,1899
+P003,Office Chair,Furniture,5499
+P004,Study Desk,Furniture,4200
+P005,Notebook Pack,Stationery,150
+P006,Ballpoint Pen Set,Stationery,99
+P007,Running Shoes,Footwear,2599
+P008,Formal Shoes,Footwear,3199
+P009,Cotton T-Shirt,Apparel,499
+P010,Denim Jeans,Apparel,1499

@@ -1,0 +1,75 @@
+============================================================
+BUSINESS SUMMARY REPORT - ORDER DATA PIPELINE
+============================================================
+
+1. RECORD COUNTS
+------------------------------------------------------------
+Total raw records      : 60
+Total cleaned records  : 42
+Total rejected records : 18
+
+2. TOTAL REVENUE (COMPLETED ORDERS)
+------------------------------------------------------------
+₹70,923.00
+
+3. REVENUE BY CATEGORY (COMPLETED ORDERS)
+------------------------------------------------------------
+Furniture            ₹30,699.00
+Footwear             ₹15,995.00
+Electronics          ₹14,891.00
+Apparel              ₹8,489.00
+Stationery           ₹849.00
+
+4. REVENUE BY CITY (COMPLETED ORDERS)
+------------------------------------------------------------
+Pune                 ₹22,596.00
+Hyderabad            ₹16,295.00
+Jaipur               ₹12,600.00
+Delhi                ₹12,091.00
+Kolkata              ₹3,897.00
+Mumbai               ₹2,945.00
+Bengaluru            ₹499.00
+
+5. ORDERS BY PAYMENT METHOD
+------------------------------------------------------------
+Credit Card          15 orders
+UPI                  9 orders
+Cash on Delivery     9 orders
+Debit Card           9 orders
+
+6. TOP 3 CUSTOMERS BY TOTAL SPEND
+------------------------------------------------------------
+1. Shalini Rao               ₹15,995.00
+2. Karan Malhotra            ₹12,699.00
+3. Manish Gupta              ₹12,600.00
+
+7. PRODUCT WITH HIGHEST QUANTITY SOLD
+------------------------------------------------------------
+Bluetooth Speaker (24 units sold)
+
+8. CATEGORY WITH HIGHEST REVENUE
+------------------------------------------------------------
+Furniture (₹30,699.00)
+
+9. REJECTED RECORDS BY REASON
+------------------------------------------------------------
+Unit price mismatch       4
+Missing customer name     2
+Duplicate order ID        2
+Missing city              2
+Invalid quantity          2
+Invalid order status      2
+Invalid payment method    2
+Invalid date format       2
+Product ID not found      2
+
+10. KEY BUSINESS INSIGHTS
+------------------------------------------------------------
+1. 30.0% of all incoming orders failed data quality checks, indicating a need for stricter validation at the point of order entry.
+2. The 'Furniture' category generates the highest revenue (₹30,699.00) among completed orders, suggesting it should be prioritized for inventory and marketing investment.
+3. 'Shalini Rao' is the top spending customer with ₹15,995.00 in completed purchases, making them a strong candidate for a loyalty program.
+4. 'Credit Card' is the most frequently used payment method, so ensuring this payment channel is fast and reliable should be a priority.
+
+============================================================
+END OF REPORT
+============================================================

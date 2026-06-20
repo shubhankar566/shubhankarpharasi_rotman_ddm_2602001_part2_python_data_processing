@@ -1,0 +1,43 @@
+order_id,customer_id,customer_name,city,product_id,product_name,category,quantity,unit_price,total_amount,order_status,payment_method,order_date
+O1001,C100,Ravi Kumar,Kolkata,P002,Bluetooth Speaker,Electronics,2,1899.0,3798.0,Completed,Credit Card,2025-01-24
+O1002,C101,Sandeep Singh,Bengaluru,P009,Cotton T-Shirt,Apparel,1,499.0,499.0,Completed,UPI,2025-02-07
+O1003,C102,Ritu Agarwal,Mumbai,P009,Cotton T-Shirt,Apparel,5,499.0,2495.0,Completed,Cash on Delivery,2025-04-08
+O1005,C104,Arjun Nair,Pune,P003,Office Chair,Furniture,1,5499.0,5499.0,Completed,Cash on Delivery,2025-03-04
+O1007,C106,Sandeep Singh,Kolkata,P007,Running Shoes,Footwear,5,2599.0,12995.0,Pending,Credit Card,2025-01-23
+O1009,C108,Divya Sharma,Bengaluru,P008,Formal Shoes,Footwear,3,3199.0,9597.0,Pending,Credit Card,2025-03-22
+O1010,C109,Ritu Agarwal,Bengaluru,P002,Bluetooth Speaker,Electronics,5,1899.0,9495.0,Cancelled,Credit Card,2025-04-06
+O1012,C111,Karan Malhotra,Kolkata,P006,Ballpoint Pen Set,Stationery,1,99.0,99.0,Completed,Debit Card,2025-06-07
+O1013,C112,Karan Malhotra,Mumbai,P008,Formal Shoes,Footwear,2,3199.0,6398.0,Pending,Credit Card,2025-06-08
+O1014,C113,Shalini Rao,Kolkata,P009,Cotton T-Shirt,Apparel,5,499.0,2495.0,Pending,Cash on Delivery,2025-02-12
+O1016,C115,Priya Desai,Delhi,P003,Office Chair,Furniture,4,5499.0,21996.0,Pending,Cash on Delivery,2025-03-17
+O1018,C117,Neha Joshi,Jaipur,P007,Running Shoes,Footwear,1,2599.0,2599.0,Cancelled,Debit Card,2025-02-17
+O1019,C118,Pooja Mehta,Pune,P009,Cotton T-Shirt,Apparel,5,499.0,2495.0,Cancelled,Credit Card,2025-03-05
+O1022,C121,Sandeep Singh,Bengaluru,P008,Formal Shoes,Footwear,2,3199.0,6398.0,Cancelled,Cash on Delivery,2025-02-18
+O1023,C122,Amit Bose,Hyderabad,P005,Notebook Pack,Stationery,2,150.0,300.0,Completed,Credit Card,2025-03-23
+O1025,C124,Rajesh Patel,Mumbai,P002,Bluetooth Speaker,Electronics,5,1899.0,9495.0,Cancelled,Credit Card,2025-02-19
+O1026,C100,Sandeep Singh,Delhi,P001,Wireless Mouse,Electronics,2,799.0,1598.0,Completed,UPI,2025-03-28
+O1027,C101,Amit Bose,Chennai,P002,Bluetooth Speaker,Electronics,3,1899.0,5697.0,Cancelled,Cash on Delivery,2025-05-07
+O1029,C103,Priya Desai,Pune,P002,Bluetooth Speaker,Electronics,4,1899.0,7596.0,Pending,Cash on Delivery,2025-06-28
+O1030,C104,Pooja Mehta,Mumbai,P001,Wireless Mouse,Electronics,4,799.0,3196.0,Cancelled,Debit Card,2025-03-15
+O1031,C105,Arjun Nair,Chennai,P004,Study Desk,Furniture,5,4200.0,21000.0,Pending,Credit Card,2025-02-14
+O1032,C106,Suresh Yadav,Chennai,P005,Notebook Pack,Stationery,1,150.0,150.0,Pending,UPI,2025-06-02
+O1033,C107,Ravi Kumar,Delhi,P009,Cotton T-Shirt,Apparel,2,499.0,998.0,Completed,Cash on Delivery,2025-04-16
+O1035,C109,Sneha Reddy,Hyderabad,P008,Formal Shoes,Footwear,5,3199.0,15995.0,Cancelled,Cash on Delivery,2025-02-05
+O1036,C110,Arjun Nair,Mumbai,P005,Notebook Pack,Stationery,5,150.0,750.0,Cancelled,UPI,2025-03-24
+O1038,C112,Neha Joshi,Delhi,P002,Bluetooth Speaker,Electronics,5,1899.0,9495.0,Completed,Credit Card,2025-01-13
+O1040,C114,Amit Bose,Pune,P010,Denim Jeans,Apparel,3,1499.0,4497.0,Completed,Debit Card,2025-03-08
+O1042,C116,Deepak Chauhan,Delhi,P010,Denim Jeans,Apparel,1,1499.0,1499.0,Cancelled,Credit Card,2025-03-17
+O1044,C118,Sneha Reddy,Mumbai,P009,Cotton T-Shirt,Apparel,5,499.0,2495.0,Pending,UPI,2025-03-05
+O1046,C120,Manish Gupta,Jaipur,P004,Study Desk,Furniture,3,4200.0,12600.0,Completed,UPI,2025-04-21
+O1047,C121,Anjali Verma,Mumbai,P005,Notebook Pack,Stationery,3,150.0,450.0,Completed,Debit Card,2025-06-06
+O1048,C122,Shalini Rao,Hyderabad,P008,Formal Shoes,Footwear,5,3199.0,15995.0,Completed,UPI,2025-06-03
+O1049,C123,Shalini Rao,Mumbai,P003,Office Chair,Furniture,3,5499.0,16497.0,Cancelled,Credit Card,2025-02-14
+O1050,C124,Sneha Reddy,Pune,P001,Wireless Mouse,Electronics,1,799.0,799.0,Pending,Credit Card,2025-02-22
+O1052,C101,Priya Desai,Mumbai,P003,Office Chair,Furniture,2,5499.0,10998.0,Cancelled,Debit Card,2025-04-26
+O1053,C102,Manish Gupta,Bengaluru,P004,Study Desk,Furniture,1,4200.0,4200.0,Pending,UPI,2025-04-28
+O1054,C103,Arjun Nair,Jaipur,P004,Study Desk,Furniture,3,4200.0,12600.0,Pending,Credit Card,2025-01-08
+O1055,C104,Karan Malhotra,Pune,P004,Study Desk,Furniture,3,4200.0,12600.0,Completed,Debit Card,2025-06-12
+O1057,C106,Anjali Verma,Delhi,P005,Notebook Pack,Stationery,5,150.0,750.0,Pending,Debit Card,2025-03-24
+O1058,C107,Ritu Agarwal,Delhi,P007,Running Shoes,Footwear,4,2599.0,10396.0,Cancelled,Credit Card,2025-01-09
+O1059,C108,Ravi Kumar,Chennai,P007,Running Shoes,Footwear,3,2599.0,7797.0,Pending,UPI,2025-03-22
+O1060,C109,Rajesh Patel,Delhi,P010,Denim Jeans,Apparel,3,1499.0,4497.0,Cancelled,Debit Card,2025-04-22

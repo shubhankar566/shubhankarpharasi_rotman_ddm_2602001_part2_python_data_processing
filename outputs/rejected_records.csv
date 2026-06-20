@@ -1,0 +1,19 @@
+order_id,customer_id,customer_name,city,product_id,quantity,unit_price,order_status,payment_method,order_date,rejection_reason
+O1004,C103,,Mumbai,P010,2,1499,Cancelled,Cash on Delivery,2025-03-11,Missing customer name
+O1003,C105,Ritu Agarwal,Kolkata,P006,1,99,Cancelled,Cash on Delivery,2025-01-18,Duplicate order ID
+O1008,C107,Kavita Iyer,,P001,1,799,Completed,UPI,2025-03-13,Missing city
+O1011,C110,Manish Gupta,Chennai,P007,0,2599,Completed,Credit Card,2025-01-27,Invalid quantity
+O1015,C114,Amit Bose,Jaipur,P003,-3,5499,Completed,UPI,2025-06-05,Invalid quantity
+O1017,C116,Ravi Kumar,Delhi,P009,5,999,Pending,Debit Card,2025-03-04,Unit price mismatch
+O1020,C119,Shalini Rao,Mumbai,P003,5,5499,Shipped,Cash on Delivery,2025-01-01,Invalid order status
+O1016,C120,Sneha Reddy,Chennai,P006,1,99,Completed,UPI,2025-06-03,Duplicate order ID
+O1024,C123,Divya Sharma,Jaipur,P007,5,2599,Pending,Cheque,2025-02-08,Invalid payment method
+O1028,C102,Deepak Chauhan,Jaipur,P003,2,1,Pending,Cash on Delivery,2025-01-07,Unit price mismatch
+O1034,C108,,Mumbai,P004,2,4200,Pending,UPI,2025-03-13,Missing customer name
+O1037,C111,Anjali Verma,Jaipur,P001,5,799,InProgress,Credit Card,2025-05-02,Invalid order status
+O1039,C113,Kavita Iyer,Mumbai,P010,5,1499,Completed,Crypto,2025-05-22,Invalid payment method
+O1041,C115,Vikram Rao,,P007,4,2599,Pending,UPI,2025-04-01,Missing city
+O1043,C117,Divya Sharma,Delhi,P003,2,5499,Pending,Debit Card,31-15-2025,Invalid date format
+O1045,C119,Pooja Mehta,Bangalore,P999,3,1899,Pending,Credit Card,2025-03-23,Product ID not found; Unit price mismatch
+O1051,C100,Divya Sharma,Hyderabad,P002,5,1899,Cancelled,Credit Card,March 5 2025,Invalid date format
+O1056,C105,Karan Malhotra,Pune,PXYZ,1,499,Completed,Debit Card,2025-05-06,Product ID not found; Unit price mismatch
