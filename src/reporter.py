@@ -1,50 +1,43 @@
-"""
-reporter.py
------------
-Handles writing all output files: cleaned_orders.csv,
-rejected_records.csv, and summary_report.txt.
-"""
+# reporter.py
+# Writes the three output files: cleaned csv, rejected csv, summary txt.
 
 import csv
 
-CLEANED_COLUMNS = [
+CLEANED_COLS = [
     "order_id", "customer_id", "customer_name", "city", "product_id",
     "product_name", "category", "quantity", "unit_price", "total_amount",
     "order_status", "payment_method", "order_date",
 ]
 
 
-def write_cleaned_orders(cleaned_records, file_path):
-    with open(file_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=CLEANED_COLUMNS)
-        writer.writeheader()
-        for row in cleaned_records:
-            writer.writerow(row)
+def write_cleaned_orders(rows, path):
+    f = open(path, "w", newline="", encoding="utf-8")
+    writer = csv.DictWriter(f, fieldnames=CLEANED_COLS)
+    writer.writeheader()
+    for r in rows:
+        writer.writerow(r)
+    f.close()
 
 
-def write_rejected_records(rejected_records, file_path):
-    if not rejected_records:
-        fieldnames = [
+def write_rejected_records(rows, path):
+    if len(rows) == 0:
+        fields = [
             "order_id", "customer_id", "customer_name", "city", "product_id",
             "quantity", "unit_price", "order_status", "payment_method",
             "order_date", "rejection_reason",
         ]
     else:
-        # Preserve original column order plus rejection_reason at the end
-        fieldnames = [k for k in rejected_records[0].keys()]
+        fields = list(rows[0].keys())
 
-    with open(file_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        for row in rejected_records:
-            writer.writerow(row)
+    f = open(path, "w", newline="", encoding="utf-8")
+    writer = csv.DictWriter(f, fieldnames=fields)
+    writer.writeheader()
+    for r in rows:
+        writer.writerow(r)
+    f.close()
 
 
-def write_summary_report(file_path, stats):
-    """
-    stats is a dictionary containing all the precomputed values needed
-    for the report (see main.py for the keys it must contain).
-    """
+def write_summary_report(path, stats):
     lines = []
     lines.append("=" * 60)
     lines.append("BUSINESS SUMMARY REPORT - ORDER DATA PIPELINE")
@@ -53,9 +46,9 @@ def write_summary_report(file_path, stats):
 
     lines.append("1. RECORD COUNTS")
     lines.append("-" * 60)
-    lines.append(f"Total raw records      : {stats['total_raw']}")
-    lines.append(f"Total cleaned records  : {stats['total_cleaned']}")
-    lines.append(f"Total rejected records : {stats['total_rejected']}")
+    lines.append("Total raw records      : " + str(stats["total_raw"]))
+    lines.append("Total cleaned records  : " + str(stats["total_cleaned"]))
+    lines.append("Total rejected records : " + str(stats["total_rejected"]))
     lines.append("")
 
     lines.append("2. TOTAL REVENUE (COMPLETED ORDERS)")
@@ -65,14 +58,14 @@ def write_summary_report(file_path, stats):
 
     lines.append("3. REVENUE BY CATEGORY (COMPLETED ORDERS)")
     lines.append("-" * 60)
-    for category, revenue in stats["revenue_by_category"].items():
-        lines.append(f"{category:<20} ₹{revenue:,.2f}")
+    for cat, rev in stats["revenue_by_category"].items():
+        lines.append(f"{cat:<20} ₹{rev:,.2f}")
     lines.append("")
 
     lines.append("4. REVENUE BY CITY (COMPLETED ORDERS)")
     lines.append("-" * 60)
-    for city, revenue in stats["revenue_by_city"].items():
-        lines.append(f"{city:<20} ₹{revenue:,.2f}")
+    for city, rev in stats["revenue_by_city"].items():
+        lines.append(f"{city:<20} ₹{rev:,.2f}")
     lines.append("")
 
     lines.append("5. ORDERS BY PAYMENT METHOD")
@@ -83,8 +76,10 @@ def write_summary_report(file_path, stats):
 
     lines.append("6. TOP 3 CUSTOMERS BY TOTAL SPEND")
     lines.append("-" * 60)
-    for rank, (name, spend) in enumerate(stats["top_customers"], start=1):
+    rank = 1
+    for name, spend in stats["top_customers"]:
         lines.append(f"{rank}. {name:<25} ₹{spend:,.2f}")
+        rank += 1
     lines.append("")
 
     lines.append("7. PRODUCT WITH HIGHEST QUANTITY SOLD")
@@ -95,8 +90,8 @@ def write_summary_report(file_path, stats):
 
     lines.append("8. CATEGORY WITH HIGHEST REVENUE")
     lines.append("-" * 60)
-    category, revenue = stats["top_category"]
-    lines.append(f"{category} (₹{revenue:,.2f})")
+    cat2, rev2 = stats["top_category"]
+    lines.append(f"{cat2} (₹{rev2:,.2f})")
     lines.append("")
 
     lines.append("9. REJECTED RECORDS BY REASON")
@@ -107,13 +102,16 @@ def write_summary_report(file_path, stats):
 
     lines.append("10. KEY BUSINESS INSIGHTS")
     lines.append("-" * 60)
-    for idx, insight in enumerate(stats["insights"], start=1):
-        lines.append(f"{idx}. {insight}")
+    i = 1
+    for note in stats["insights"]:
+        lines.append(f"{i}. {note}")
+        i += 1
     lines.append("")
 
     lines.append("=" * 60)
     lines.append("END OF REPORT")
     lines.append("=" * 60)
 
-    with open(file_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(lines))
+    f = open(path, "w", encoding="utf-8")
+    f.write("\n".join(lines))
+    f.close()

@@ -1,10 +1,6 @@
-"""
-main.py
--------
-Entry point for the order data processing pipeline.
-This file mainly orchestrates the pipeline by calling functions
-from the src package. It does not contain business logic itself.
-"""
+# main.py
+# Entry point. Doesn't do any real logic itself - just calls into src/
+# in order: load -> clean -> write outputs -> analyze -> write report.
 
 import os
 import sys
@@ -14,7 +10,6 @@ from src import cleaner
 from src import analyzer
 from src import reporter
 
-# File paths
 RAW_ORDERS_PATH = os.path.join("data", "raw_orders.csv")
 PRODUCT_MASTER_PATH = os.path.join("data", "product_master.csv")
 
@@ -24,34 +19,35 @@ SUMMARY_OUTPUT_PATH = os.path.join("outputs", "summary_report.txt")
 
 
 def run_pipeline():
-    print("Starting order data processing pipeline...\n")
+    print("Starting order data processing pipeline...")
+    print("")
 
-    # Task 1: Load data
     try:
         raw_orders = loader.load_orders(RAW_ORDERS_PATH)
         _, product_lookup = loader.load_product_master(PRODUCT_MASTER_PATH)
-        print(f"Loaded {len(raw_orders)} raw order records.")
-        print(f"Loaded {len(product_lookup)} products into the product master.\n")
-    except Exception as error:
-        print(f"ERROR while loading data: {error}")
+        print("Loaded " + str(len(raw_orders)) + " raw order records.")
+        print("Loaded " + str(len(product_lookup)) + " products into the product master.")
+        print("")
+    except Exception as e:
+        print("ERROR while loading data: " + str(e))
         sys.exit(1)
 
-    # Task 2 & 3: Clean orders and separate rejected records
     cleaned_records, rejected_records = cleaner.clean_orders(raw_orders, product_lookup)
-    print(f"Cleaning complete: {len(cleaned_records)} valid, {len(rejected_records)} rejected.\n")
+    print("Cleaning complete: " + str(len(cleaned_records)) + " valid, " +
+          str(len(rejected_records)) + " rejected.")
+    print("")
 
-    # Task 4: Write cleaned and rejected outputs
     os.makedirs("outputs", exist_ok=True)
     try:
         reporter.write_cleaned_orders(cleaned_records, CLEANED_OUTPUT_PATH)
         reporter.write_rejected_records(rejected_records, REJECTED_OUTPUT_PATH)
-        print(f"Wrote cleaned records to {CLEANED_OUTPUT_PATH}")
-        print(f"Wrote rejected records to {REJECTED_OUTPUT_PATH}\n")
-    except Exception as error:
-        print(f"ERROR while writing output files: {error}")
+        print("Wrote cleaned records to " + CLEANED_OUTPUT_PATH)
+        print("Wrote rejected records to " + REJECTED_OUTPUT_PATH)
+        print("")
+    except Exception as e:
+        print("ERROR while writing output files: " + str(e))
         sys.exit(1)
 
-    # Task 5: Business analysis and summary report
     stats = {
         "total_raw": len(raw_orders),
         "total_cleaned": len(cleaned_records),
@@ -69,9 +65,10 @@ def run_pipeline():
 
     try:
         reporter.write_summary_report(SUMMARY_OUTPUT_PATH, stats)
-        print(f"Wrote business summary report to {SUMMARY_OUTPUT_PATH}\n")
-    except Exception as error:
-        print(f"ERROR while writing summary report: {error}")
+        print("Wrote business summary report to " + SUMMARY_OUTPUT_PATH)
+        print("")
+    except Exception as e:
+        print("ERROR while writing summary report: " + str(e))
         sys.exit(1)
 
     print("Pipeline finished successfully.")

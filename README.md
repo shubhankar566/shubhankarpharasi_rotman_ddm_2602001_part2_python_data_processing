@@ -8,17 +8,17 @@
 
 ## 1. Project Overview
 
-This project is a pure-Python (no pandas) data-processing pipeline that:
+This project is a data-processing pipeline that:
 
-1. Reads raw e-commerce order data and a product master file (CSV).
-2. Cleans and standardizes the data (names, cities, statuses, payment methods, dates).
-3. Validates every record against a set of business rules.
+1. Reads e-commerce file.
+2. Cleans and standardizes the data.
+3. Validates every record.
 4. Splits records into **cleaned (valid)** and **rejected (invalid)** sets.
 5. Recalculates `total_amount` for every valid order.
 6. Generates a business summary report with revenue breakdowns, top customers,
    top products, and plain-English insights.
 
-Only Python's standard library is used: `csv`, `os`, `datetime`, `sys`. **No pandas.**
+Only Python's standard library is used: **No pandas.**
 
 ---
 
@@ -108,10 +108,10 @@ shubhankarpharasi_rotman_ddm_2602001_part2_python_data_processing/
 ├── main.py
 ├── src/
 │   ├── __init__.py
-│   ├── loader.py      # Task 1: reads CSV files into lists/dicts
-│   ├── cleaner.py      # Task 2 & 3: cleaning + validation + rejection
-│   ├── analyzer.py     # Task 5: business analytics calculations
-│   └── reporter.py     # Task 4 & 5: writes all output files
+│   ├── loader.py
+│   ├── cleaner.py
+│   ├── analyzer.py
+│   └── reporter.py
 ├── data/
 │   ├── raw_orders.csv
 │   └── product_master.csv
@@ -132,7 +132,7 @@ shubhankarpharasi_rotman_ddm_2602001_part2_python_data_processing/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<your-username>/shubhankarpharasi_rotman_ddm_2602001_part2_python_data_processing.git
+git clone https://github.com/shubhankar566/shubhankarpharasi_rotman_ddm_2602001_part2_python_data_processing.git
 cd shubhankarpharasi_rotman_ddm_2602001_part2_python_data_processing
 
 # 2. Run the pipeline
@@ -193,16 +193,4 @@ whatever is in `data/raw_orders.csv` at the time the pipeline is run.)
   every later occurrence is automatically rejected as a duplicate.
 - Revenue and customer-spend calculations only include orders with
   `order_status = Completed`.
-
----
-
-## 11. Screenshots
-
-See `outputs/screenshots/` for screenshots of:
-- Terminal output of a successful `python3 main.py` run
-- Contents of `outputs/cleaned_orders.csv`
-- Contents of `outputs/rejected_records.csv`
-- Contents of `outputs/summary_report.txt`
-
-*(Add your own screenshots here before submitting — see the GitHub upload
-guide for instructions.)*
+  

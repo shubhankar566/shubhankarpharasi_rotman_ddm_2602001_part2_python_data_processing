@@ -65,10 +65,10 @@ Product ID not found      2
 
 10. KEY BUSINESS INSIGHTS
 ------------------------------------------------------------
-1. 30.0% of all incoming orders failed data quality checks, indicating a need for stricter validation at the point of order entry.
-2. The 'Furniture' category generates the highest revenue (₹30,699.00) among completed orders, suggesting it should be prioritized for inventory and marketing investment.
-3. 'Shalini Rao' is the top spending customer with ₹15,995.00 in completed purchases, making them a strong candidate for a loyalty program.
-4. 'Credit Card' is the most frequently used payment method, so ensuring this payment channel is fast and reliable should be a priority.
+1. 30.0% of incoming orders failed data quality checks, which means order entry probably needs tighter validation before data even reaches this pipeline.
+2. 'Furniture' brings in the most revenue among completed orders (₹30,699.00), so it's probably worth pushing more stock and marketing budget toward this category.
+3. 'Shalini Rao' is the single biggest spender at ₹15,995.00 in completed orders - a good candidate for some kind of loyalty perk.
+4. Most customers pay using 'Credit Card', so keeping that payment option fast and reliable matters more than the others.
 
 ============================================================
 END OF REPORT

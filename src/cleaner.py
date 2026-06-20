@@ -1,17 +1,14 @@
-"""
-cleaner.py
-----------
-Contains all data cleaning and validation rules for the order
-records. Produces two lists: cleaned (valid) records and rejected
-records (each tagged with one or more rejection reasons).
-"""
+# cleaner.py
+# This is where most of the actual logic lives - cleaning text fields,
+# checking each rule, and splitting orders into "good" and "rejected" piles.
 
 import datetime
 
-VALID_STATUSES = {"Completed", "Pending", "Cancelled"}
-VALID_PAYMENT_METHODS = {"Credit Card", "Debit Card", "UPI", "Cash on Delivery"}
+ALLOWED_STATUS = ["Completed", "Pending", "Cancelled"]
+ALLOWED_PAYMENT = ["Credit Card", "Debit Card", "UPI", "Cash on Delivery"]
 
-CITY_STANDARDIZATION = {
+# some cities show up with weird spelling in the raw file, fixing those here
+CITY_FIXES = {
     "bangalore": "Bengaluru",
     "bengaluru": "Bengaluru",
     "bombay": "Mumbai",
@@ -24,70 +21,64 @@ CITY_STANDARDIZATION = {
     "hyderabad": "Hyderabad",
 }
 
-DATE_INPUT_FORMATS = ["%Y-%m-%d", "%d-%m-%Y", "%d/%m/%Y"]
-
-
-def standardize_text(value):
-    """Trims extra spaces and collapses internal multiple spaces."""
-    if value is None:
-        return ""
-    return " ".join(value.strip().split())
-
-
-def standardize_name(value):
-    """Trims spaces and converts a name to Title Case."""
-    cleaned = standardize_text(value)
-    return cleaned.title()
-
-
-def standardize_city(value):
-    """Trims spaces and maps known city spelling variants to one form."""
-    cleaned = standardize_text(value)
-    if not cleaned:
-        return ""
-    key = cleaned.lower()
-    return CITY_STANDARDIZATION.get(key, cleaned.title())
-
-
-def standardize_status(value):
-    """Trims spaces and converts order status casing to Title Case."""
-    cleaned = standardize_text(value)
-    return cleaned.title()
-
-
-PAYMENT_METHOD_MAP = {
+PAYMENT_FIXES = {
     "credit card": "Credit Card",
     "debit card": "Debit Card",
     "upi": "UPI",
     "cash on delivery": "Cash on Delivery",
 }
 
+DATE_FORMATS = ["%Y-%m-%d", "%d-%m-%Y", "%d/%m/%Y"]
 
-def standardize_payment(value):
-    """Trims spaces and normalizes payment method casing using a lookup map."""
-    cleaned = standardize_text(value)
-    if not cleaned:
+
+def clean_text(value):
+    # trims spaces front/back and squashes double spaces in the middle
+    if not value:
         return ""
-    key = cleaned.lower()
-    return PAYMENT_METHOD_MAP.get(key, cleaned.title())
+    return " ".join(value.strip().split())
 
 
-def parse_date(value):
-    """
-    Tries to parse a date string using the accepted formats.
-    Returns the date in YYYY-MM-DD format if valid, otherwise None.
-    """
-    cleaned = standardize_text(value)
-    for fmt in DATE_INPUT_FORMATS:
+def fix_name(value):
+    txt = clean_text(value)
+    return txt.title()
+
+
+def fix_city(value):
+    txt = clean_text(value)
+    if txt == "":
+        return ""
+    lower = txt.lower()
+    if lower in CITY_FIXES:
+        return CITY_FIXES[lower]
+    return txt.title()
+
+
+def fix_status(value):
+    return clean_text(value).title()
+
+
+def fix_payment(value):
+    txt = clean_text(value)
+    if txt == "":
+        return ""
+    lower = txt.lower()
+    if lower in PAYMENT_FIXES:
+        return PAYMENT_FIXES[lower]
+    return txt.title()
+
+
+def try_parse_date(value):
+    txt = clean_text(value)
+    for fmt in DATE_FORMATS:
         try:
-            parsed = datetime.datetime.strptime(cleaned, fmt)
-            return parsed.strftime("%Y-%m-%d")
+            d = datetime.datetime.strptime(txt, fmt)
+            return d.strftime("%Y-%m-%d")
         except ValueError:
-            continue
+            pass
     return None
 
 
-def is_number(value):
+def looks_numeric(value):
     try:
         float(value)
         return True
@@ -95,116 +86,99 @@ def is_number(value):
         return False
 
 
-def clean_orders(raw_orders, product_lookup):
-    """
-    Applies cleaning and validation rules to every raw order record.
+def clean_orders(raw_rows, product_lookup):
+    good = []
+    bad = []
+    used_ids = set()
 
-    Returns a tuple: (cleaned_records, rejected_records)
-    cleaned_records  -> list of dicts ready for the cleaned_orders.csv output
-    rejected_records -> list of dicts with a 'rejection_reason' field
-    """
-    cleaned_records = []
-    rejected_records = []
-    seen_order_ids = set()
+    for row in raw_rows:
+        problems = []
 
-    for row in raw_orders:
-        reasons = []
+        oid = clean_text(row.get("order_id"))
+        cust_id = clean_text(row.get("customer_id"))
+        name = fix_name(row.get("customer_name"))
+        city = fix_city(row.get("city"))
+        pid = clean_text(row.get("product_id")).upper()
+        status = fix_status(row.get("order_status"))
+        payment = fix_payment(row.get("payment_method"))
+        qty_raw = row.get("quantity")
+        price_raw = row.get("unit_price")
+        date_raw = row.get("order_date")
 
-        order_id = standardize_text(row.get("order_id"))
-        customer_id = standardize_text(row.get("customer_id"))
-        customer_name = standardize_name(row.get("customer_name"))
-        city = standardize_city(row.get("city"))
-        product_id = standardize_text(row.get("product_id")).upper()
-        status = standardize_status(row.get("order_status"))
-        payment_method = standardize_payment(row.get("payment_method"))
-        raw_quantity = row.get("quantity")
-        raw_price = row.get("unit_price")
-        raw_date = row.get("order_date")
+        if oid == "":
+            problems.append("Missing order ID")
+        elif oid in used_ids:
+            problems.append("Duplicate order ID")
 
-        # Rule: duplicate order ID
-        if not order_id:
-            reasons.append("Missing order ID")
-        elif order_id in seen_order_ids:
-            reasons.append("Duplicate order ID")
+        if name == "":
+            problems.append("Missing customer name")
 
-        # Rule: missing customer name
-        if not customer_name:
-            reasons.append("Missing customer name")
+        if city == "":
+            problems.append("Missing city")
 
-        # Rule: missing city
-        if not city:
-            reasons.append("Missing city")
+        product = product_lookup.get(pid)
+        if product is None:
+            problems.append("Product ID not found")
 
-        # Rule: product ID must exist in product master
-        product_info = product_lookup.get(product_id)
-        if not product_info:
-            reasons.append("Product ID not found")
+        # quantity check - has to be a whole number above zero
+        qty_ok = False
+        qty = None
+        if looks_numeric(qty_raw):
+            qty = int(float(qty_raw))
+            if qty > 0:
+                qty_ok = True
+        if not qty_ok:
+            problems.append("Invalid quantity")
 
-        # Rule: quantity must be a positive whole number
-        quantity_valid = False
-        quantity = None
-        if is_number(raw_quantity):
-            quantity = int(float(raw_quantity))
-            if quantity > 0:
-                quantity_valid = True
-        if not quantity_valid:
-            reasons.append("Invalid quantity")
-
-        # Rule: unit price must match the product master standard price
-        price_valid = False
-        unit_price = None
-        if is_number(raw_price):
-            unit_price = float(raw_price)
-            if product_info:
-                standard_price = float(product_info["standard_price"])
-                if abs(unit_price - standard_price) < 0.01:
-                    price_valid = True
-            if not price_valid:
-                reasons.append("Unit price mismatch")
+        # price check against the product master
+        price_ok = False
+        price = None
+        if looks_numeric(price_raw):
+            price = float(price_raw)
+            if product is not None:
+                std_price = float(product["standard_price"])
+                if abs(price - std_price) < 0.01:
+                    price_ok = True
+            if not price_ok:
+                problems.append("Unit price mismatch")
         else:
-            reasons.append("Unit price mismatch")
+            problems.append("Unit price mismatch")
 
-        # Rule: order status must be one of the allowed values
-        if status not in VALID_STATUSES:
-            reasons.append("Invalid order status")
+        if status not in ALLOWED_STATUS:
+            problems.append("Invalid order status")
 
-        # Rule: payment method must be one of the allowed values
-        if payment_method not in VALID_PAYMENT_METHODS:
-            reasons.append("Invalid payment method")
+        if payment not in ALLOWED_PAYMENT:
+            problems.append("Invalid payment method")
 
-        # Rule: date must be parseable
-        parsed_date = parse_date(raw_date)
-        if not parsed_date:
-            reasons.append("Invalid date format")
+        good_date = try_parse_date(date_raw)
+        if good_date is None:
+            problems.append("Invalid date format")
 
-        if reasons:
+        if len(problems) > 0:
             rejected_row = dict(row)
-            rejected_row["rejection_reason"] = "; ".join(reasons)
-            rejected_records.append(rejected_row)
-            # Still mark the order id as seen so a later duplicate of an
-            # already-rejected id is also flagged correctly.
-            if order_id:
-                seen_order_ids.add(order_id)
+            rejected_row["rejection_reason"] = "; ".join(problems)
+            bad.append(rejected_row)
+            if oid != "":
+                used_ids.add(oid)
             continue
 
-        # If we reach here, the record is fully valid
-        seen_order_ids.add(order_id)
-        total_amount = round(quantity * unit_price, 2)
+        used_ids.add(oid)
+        total = round(qty * price, 2)
 
-        cleaned_records.append({
-            "order_id": order_id,
-            "customer_id": customer_id,
-            "customer_name": customer_name,
+        good.append({
+            "order_id": oid,
+            "customer_id": cust_id,
+            "customer_name": name,
             "city": city,
-            "product_id": product_id,
-            "product_name": product_info["product_name"],
-            "category": product_info["category"],
-            "quantity": quantity,
-            "unit_price": unit_price,
-            "total_amount": total_amount,
+            "product_id": pid,
+            "product_name": product["product_name"],
+            "category": product["category"],
+            "quantity": qty,
+            "unit_price": price,
+            "total_amount": total,
             "order_status": status,
-            "payment_method": payment_method,
-            "order_date": parsed_date,
+            "payment_method": payment,
+            "order_date": good_date,
         })
 
-    return cleaned_records, rejected_records
+    return good, bad

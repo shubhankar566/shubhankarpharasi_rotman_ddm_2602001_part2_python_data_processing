@@ -1,56 +1,49 @@
-"""
-loader.py
-----------
-Responsible for reading the raw CSV files from disk and converting
-them into Python lists of dictionaries. No cleaning or validation
-happens here - this module only deals with reading data.
-"""
+# loader.py
+# Just handles reading the two CSV files into Python lists/dicts.
+# Nothing fancy here - no cleaning, no validation, just IO.
 
 import csv
 import os
 
 
-def load_csv(file_path):
-    """
-    Reads a CSV file and returns its contents as a list of dictionaries.
-    Each dictionary represents one row, keyed by the column headers.
+def load_csv(path):
+    # basic check first, no point trying to open something that isn't there
+    if not os.path.exists(path):
+        raise FileNotFoundError("Could not find file: " + path)
 
-    Raises FileNotFoundError if the file does not exist, and a
-    generic Exception for any other read error.
-    """
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"Required data file not found: {file_path}")
-
-    records = []
+    rows = []
     try:
-        with open(file_path, "r", newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                records.append(row)
-    except Exception as error:
-        raise Exception(f"Error while reading {file_path}: {error}")
+        f = open(path, "r", newline="", encoding="utf-8")
+        reader = csv.DictReader(f)
+        for r in reader:
+            rows.append(r)
+        f.close()
+    except Exception as e:
+        raise Exception("Something went wrong reading " + path + " -> " + str(e))
 
-    return records
-
-
-def load_orders(file_path):
-    """Loads the raw orders CSV file."""
-    return load_csv(file_path)
+    return rows
 
 
-def load_product_master(file_path):
-    """
-    Loads the product master CSV file and also returns it as a
-    dictionary keyed by product_id for fast lookups during cleaning.
-    """
-    records = load_csv(file_path)
-    product_lookup = {}
-    for row in records:
-        pid = (row.get("product_id") or "").strip().upper()
+def load_orders(path):
+    return load_csv(path)
+
+
+def load_product_master(path):
+    # we need this twice - once as plain rows, once as a dict so we can
+    # look products up by id quickly while cleaning
+    rows = load_csv(path)
+
+    lookup = {}
+    for r in rows:
+        pid = r.get("product_id", "")
         if pid:
-            product_lookup[pid] = {
-                "product_name": row.get("product_name", "").strip(),
-                "category": row.get("category", "").strip(),
-                "standard_price": row.get("standard_price", "").strip(),
-            }
-    return records, product_lookup
+            pid = pid.strip().upper()
+        if not pid:
+            continue
+        lookup[pid] = {
+            "product_name": r.get("product_name", "").strip(),
+            "category": r.get("category", "").strip(),
+            "standard_price": r.get("standard_price", "").strip(),
+        }
+
+    return rows, lookup
